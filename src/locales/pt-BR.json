@@ -1,0 +1,68 @@
+{
+  "app": {
+    "title": "Multidrop",
+    "language": "Idioma"
+  },
+  "refund": {
+    "title": "Solicitar reembolso",
+    "subtitle": "Você pode solicitar um reembolso dentro do prazo estipulado pelo produtor.",
+    "emai_label": "E-mail usado na compra",
+    "verify_email": "Verificar seu email",
+    "email_placeholder": "Digite seu email",
+    "continue": "Continuar",
+    "your_purchases": "Suas compras",
+    "purchase_date": "Data da compra",
+    "refund_value": "Valor do reembolso",
+    "request_refund": "Solicitar reembolso",
+    "find_purchase": "Encontrar sua compra",
+    "loading": "Carregando..."
+  },
+  "dialog": {
+    "title": "Verifique seu e-mail",
+    "description": "Para confirmar esta operação, digite o código que enviamos para o seu e-mail:",
+    "resend_code": "Reenviar código",
+    "continue": "Continuar"
+  },
+  "purchase": {
+    "back": "Voltar",
+    "logged": "Você está logado(a) como:",
+    "not_you": "Não é você?",
+    "alert": "Ao solicitar um reembolso, a sua compra será cancelada e você não terá mais acesso ao produto.",
+    "purchase_value": "Valor da compra:",
+    "purchase_date": "Data da compra:",
+    "refund_deadline": "Prazo limite para reembolso:",
+    "request_refund_button": "Solicitar reembolso",
+    "refund_button_requested": "Reembolso solicitado",
+    "expired_button": "Expirado",
+    "refund_button_refunded": "Reembolsado"
+  },
+  "purchase_detail": {
+    "title": "Solicitar reembolso",
+    "details": "Detalhes do produto",
+    "name": "Nome do produto",
+    "value": "Valor",
+    "refund_deadline": "Prazo limite para reembolso:",
+    "payment_method": "Método de pagamento",
+    "support": "E-mail de suporte do vendedor",
+    "motivation": "Motivo do reembolso",
+    "select_motive": "Selecione o motivo do reembolso",
+    "required": "Obrigatório",
+    "optional": "Opcional",
+    "more_information": "Você gostaria de informar mais algo?"
+  },
+  "refund_form": {
+    "reasons": {
+      "access_issue": "Eu ainda não consegui acessar o produto, mas gostaria de acessar",
+      "need_money": "Preciso do dinheiro para outras coisas",
+      "files_not_opening": "Recebi o acesso, mas as páginas ou arquivos não abrem",
+      "quality_expectations": "A qualidade do produto não atingiu as minhas expectativas",
+      "incomplete_product": "O produto está incompleto",
+      "duplicate_purchase": "Compra duplicada"
+    }
+  },
+  "refund_dialog": {
+    "title": "Reembolso solicitado",
+    "description": "Você receberá um e-mail com o status do seu reembolso. Verifique a sua caixa de SPAM.",
+    "close": "Fechar"
+  }
+}

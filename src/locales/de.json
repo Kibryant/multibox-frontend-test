@@ -1,0 +1,68 @@
+{
+  "app": {
+    "title": "Multidrop",
+    "language": "Sprache"
+  },
+  "refund": {
+    "title": "Rückerstattung beantragen",
+    "subtitle": "Sie können innerhalb der vom Hersteller festgelegten Frist eine Rückerstattung beantragen.",
+    "emai_label": "E-Mail, die für den Kauf verwendet wurde",
+    "verify_email": "Überprüfen Sie Ihre E-Mail",
+    "email_placeholder": "Geben Sie Ihre E-Mail ein",
+    "continue": "Fortfahren",
+    "your_purchases": "Ihre Einkäufe",
+    "purchase_date": "Kaufdatum",
+    "refund_value": "Rückerstattungsbetrag",
+    "request_refund": "Rückerstattung beantragen",
+    "find_purchase": "Finden Sie Ihren Kauf",
+    "loading": "Wird geladen..."
+  },
+  "dialog": {
+    "title": "Überprüfen Sie Ihre E-Mail",
+    "description": "Um diese Aktion zu bestätigen, geben Sie den Code ein, den wir an Ihre E-Mail gesendet haben:",
+    "resend_code": "Code erneut senden",
+    "continue": "Fortfahren"
+  },
+  "purchase": {
+    "back": "Zurück",
+    "logged": "Sie sind eingeloggt als:",
+    "not_you": "Nicht Sie?",
+    "alert": "Wenn Sie eine Rückerstattung beantragen, wird Ihr Kauf storniert und Sie haben keinen Zugriff mehr auf das Produkt.",
+    "purchase_value": "Kaufwert:",
+    "purchase_date": "Kaufdatum:",
+    "refund_deadline": "Rückerstattungsfrist:",
+    "request_refund_button": "Rückerstattung beantragen",
+    "refund_button_requested": "Rückerstattung beantragt",
+    "expired_button": "Abgelaufen",
+    "refund_button_refunded": "Erstattet"
+  },
+  "purchase_detail": {
+    "title": "Rückerstattung beantragen",
+    "details": "Produktdetails",
+    "name": "Produktname",
+    "value": "Wert",
+    "refund_deadline": "Rückerstattungsfrist:",
+    "payment_method": "Zahlungsmethode",
+    "support": "Support-E-Mail des Verkäufers",
+    "motivation": "Grund für die Rückerstattung",
+    "select_motive": "Wählen Sie den Grund für die Rückerstattung aus",
+    "required": "Erforderlich",
+    "more_information": "Möchten Sie weitere Informationen angeben?",
+    "optional": "Optional"
+  },
+  "refund_form": {
+    "reasons": {
+      "access_issue": "Ich konnte noch nicht auf das Produkt zugreifen, möchte aber darauf zugreifen",
+      "need_money": "Ich brauche das Geld für andere Dinge",
+      "files_not_opening": "Ich habe Zugriff erhalten, aber die Seiten oder Dateien öffnen sich nicht",
+      "quality_expectations": "Die Qualität des Produkts entsprach nicht meinen Erwartungen",
+      "incomplete_product": "Das Produkt ist unvollständig",
+      "duplicate_purchase": "Doppelter Kauf"
+    }
+  },
+  "refund_dialog": {
+    "title": "Rückerstattung beantragt",
+    "description": "Ihre Rückerstattungsanfrage wurde erfolgreich gesendet. Sie erhalten eine E-Mail mit dem Status Ihrer Anfrage.",
+    "continue": "Fortfahren"
+  }
+}

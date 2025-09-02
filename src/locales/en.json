@@ -1,0 +1,69 @@
+{
+  "app": {
+    "title": "Multidrop",
+    "language": "Language"
+  },
+  "refund": {
+    "title": "Request refund",
+    "subtitle": "You can request a refund within the period stipulated by the producer.",
+    "emai_label": "Email used for purchase",
+    "verify_email": "Verify your email",
+    "email_placeholder": "Enter your email",
+    "continue": "Continue",
+    "your_purchases": "Your purchases",
+    "purchase_date": "Purchase date",
+    "refund_value": "Refund value",
+    "request_refund": "Request refund",
+    "find_purchase": "Find your purchase",
+    "loading": "Loading..."
+  },
+  "dialog": {
+    "title": "Check your email",
+    "description": "To confirm this operation, enter the code we sent to your email:",
+    "resend_code": "Resend code",
+    "continue": "Continue"
+  },
+  "purchase": {
+    "back": "Back",
+    "logged": "You are logged in as:",
+    "not_you": "Not you?",
+    "alert": "By requesting a refund, your purchase will be canceled and you will no longer have access to the product.",
+    "purchase_value": "Purchase value:",
+    "purchase_date": "Purchase date:",
+    "refund_deadline": "Refund deadline:",
+    "request_refund_button": "Request refund",
+    "refund_button_requested": "Refund requested",
+    "expired_button": "Expired",
+    "refund_button_refunded": "Refunded"
+  },
+  "purchase_detail": {
+    "title": "Request refund",
+    "details": "Product details",
+    "name": "Product name",
+    "value": "Value",
+    "refund_deadline": "Refund deadline:",
+    "payment_method": "Payment method",
+    "support": "Seller support email",
+    "motivation": "Refund motivation",
+    "select_motive": "Select refund motive",
+    "required": "Required",
+    "more_information": "Would you like to provide more information?",
+    "optional": "Optional"
+  },
+  "refund_form": {
+    "reasons": {
+      "access_issue": "I still haven't been able to access the product, but I would like to access it",
+      "need_money": "I need the money for other things",
+      "files_not_opening": "I received access, but the pages or files do not open",
+      "quality_expectations": "The quality of the product did not meet my expectations",
+      "incomplete_product": "The product is incomplete",
+      "duplicate_purchase": "Duplicate purchase"
+    },
+    "optional": "Optional"
+  },
+  "refund_dialog": {
+    "title": "Refund requested",
+    "description": "Your refund request has been sent successfully. You will receive an email with the status of your request.",
+    "continue": "Continue"
+  }
+}
