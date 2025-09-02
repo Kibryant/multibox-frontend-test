@@ -176,13 +176,16 @@
                     v-model="selectedReason"
                     :value="reason.id"
                   />
+
                   <span
-                    class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center transition-colors peer-checked:border-green-600"
+                    class="w-5 h-5 min-w-[20px] min-h-[20px] flex-shrink-0 rounded-full border-2 border-gray-300 flex items-center justify-center transition-colors peer-checked:border-green-600"
                   >
                     <span
-                      class="w-2.5 h-2.5 rounded-full peer-checked:bg-green-600 transition-colors"
+                      class="w-2.5 h-2.5 rounded-full transition-colors"
+                      :class="selectedReason === reason.id ? 'bg-green-600' : 'bg-transparent'"
                     ></span>
                   </span>
+
                   <span class="text-sm text-text-color">
                     {{ $t(reason.labelKey) }}
                   </span>
@@ -194,11 +197,13 @@
               <label class="block text-md font-medium text-text-color mb-1" for="additional-info">
                 {{ $t('purchase_detail.more_information') }}
               </label>
+
               <textarea
                 id="additional-info"
                 rows="4"
                 class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-offset-primary-color-medium focus:border-primary-color-medium focus:outline-none p-3 text-sm text-text-color"
               />
+
               <p class="text-xs text-secundary-text-color mt-1">
                 {{ $t('purchase_detail.optional') }}
               </p>
@@ -208,7 +213,7 @@
 
         <BaseButton
           type="button"
-          class="w-full md:w-[200px] justify-center"
+          class="w-fit justify-center"
           :disabled="loading || !!error || !selectedReason"
           @click="openDialog"
         >
