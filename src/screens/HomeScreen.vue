@@ -114,7 +114,12 @@
               </p>
             </div>
 
-            <BaseButton type="submit" aria-disabled="isLoading" full :is-loading="isLoading">
+            <BaseButton
+              type="submit"
+              full
+              :is-loading="isLoading"
+              :disabled="email === '' || isLoading"
+            >
               <span className="font-normal text-base">
                 {{ $t('refund.find_purchase') }}
               </span>

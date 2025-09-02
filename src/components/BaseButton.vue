@@ -1,7 +1,8 @@
 <template>
   <Button
     v-bind="$attrs"
-    :disabled="isLoading || !!$attrs.disabled"
+    :aria-disabled="isLoading || disabled"
+    :disabled="isLoading || disabled"
     :class="[
       baseClass,
       variants[variant],

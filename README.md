@@ -31,10 +31,12 @@ multibox-frontend/
 │ ├── router/ # Vue Router configuration
 │ ├── composables/ # Reusable composition functions
 │ ├── locales/ # i18n translation files
-| |── utils/ # Functions
+│ ├── utils/ # Functions
+│ ├── core/ # Core functionality
+│ ├── services/ # API services
 │ ├── App.vue # Root component
 │ └── main.ts # Application entry point
-├── tests/ # Unit test files (Vitest)
+│ └── styles.css # Global css
 ├── vite.config.ts # Vite configuration
 ├── package.json # Project metadata & scripts
 └── tsconfig.json # TypeScript configuration
@@ -53,7 +55,7 @@ multibox-frontend/
 
 ### Prerequisites
 
-- Node.js (>= 16)
+- Node.js (>= 22)
 - npm, yarn, or pnpm
 
 ### Installation

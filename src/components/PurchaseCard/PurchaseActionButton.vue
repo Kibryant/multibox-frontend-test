@@ -1,6 +1,28 @@
 <template>
-  <Button :disabled="isDisabled" :loading="loading" :class="buttonClasses" @click="handleClick">
-    {{ buttonText }}
+  <Button
+    type="button"
+    :disabled="isDisabled"
+    :loading="loading"
+    :aria-disabled="isDisabled"
+    :aria-busy="loading || undefined"
+    :class="[
+      'inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200',
+      'focus:outline-none focus:ring-2 focus:ring-offset-2',
+      fullWidth ? 'w-full' : 'w-auto',
+      sizeClasses[size],
+      uiByStatus[status].base,
+      loading ? 'opacity-70 cursor-not-allowed' : uiByStatus[status].hover,
+    ]"
+    @click="onClick"
+  >
+    <i v-if="status === 'refunded'" class="pi pi-check text-emerald-700 mr-2"></i>
+
+    <span v-if="!loading">{{ buttonText }}</span>
+
+    <span v-else class="inline-flex items-center gap-2">
+      <i class="pi pi-spinner animate-spin text-[14px]" />
+      <span>{{ t('common.loading') || 'Carregando…' }}</span>
+    </span>
   </Button>
 </template>
 
@@ -9,76 +31,61 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Button from 'primevue/button'
 
-const props = defineProps<{
-  status: 'available' | 'requested' | 'expired' | 'refunded'
-  loading?: boolean
-  fullWidth?: boolean
-}>()
+type Status = 'available' | 'requested' | 'expired' | 'refunded'
+type Size = 'xs' | 'sm' | 'md'
 
-const emit = defineEmits<{
-  click: []
-}>()
+const props = withDefaults(
+  defineProps<{
+    status: Status
+    loading?: boolean
+    fullWidth?: boolean
+    size?: Size
+  }>(),
+  {
+    loading: false,
+    fullWidth: false,
+    size: 'sm',
+  },
+)
 
+const emit = defineEmits<{ (e: 'click'): void }>()
 const { t } = useI18n()
 
-const isDisabled = computed(() => {
-  return props.status !== 'available' || props.loading
-})
-
-const buttonText = computed(() => {
-  switch (props.status) {
-    case 'available':
-      return t('purchase.request_refund_button')
-    case 'requested':
-      return t('purchase.refund_button_requested')
-    case 'expired':
-      return t('purchase.expired_button')
-    case 'refunded':
-      return t('purchase.refund_button_refunded')
-    default:
-      return t('purchase.request_refund_button')
-  }
-})
-
-const buttonClasses = computed(() => {
-  const baseClasses = [
-    'font-medium',
-    'px-6',
-    'py-2',
-    'rounded-md',
-    'transition-colors',
-    'border-none',
-  ]
-
-  if (props.fullWidth) {
-    baseClasses.push('w-full')
-  }
-
-  switch (props.status) {
-    case 'available':
-      baseClasses.push('bg-zinc-500', 'hover:bg-zinc-600', 'text-white', 'cursor-pointer')
-      break
-    case 'requested':
-      baseClasses.push('bg-zinc-900', 'text-white', 'cursor-not-allowed')
-      break
-    case 'expired':
-      baseClasses.push('bg-red-500', 'text-white', 'cursor-not-allowed')
-      break
-    case 'refunded':
-      baseClasses.push('bg-green-500', 'text-white', 'cursor-not-allowed')
-      break
-  }
-
-  return baseClasses.join(' ')
-})
-
-const handleClick = () => {
-  if (!isDisabled.value) {
-    emit('click')
-  }
+const sizeClasses: Record<Size, string> = {
+  xs: 'h-8 px-3 text-[13px]',
+  sm: 'h-9 px-4 text-sm',
+  md: 'h-10 px-5 text-base',
 }
 
-defineOptions({
-  name: 'PurchaseActionButton',
-})
+const uiByStatus: Record<Status, { base: string; hover: string; key: string }> = {
+  available: {
+    key: 'purchase.request_refund_button',
+    base: 'bg-neutral-900 text-white shadow-sm focus:ring-neutral-700',
+    hover: 'hover:bg-neutral-800',
+  },
+  requested: {
+    key: 'purchase.refund_button_requested',
+    base: 'bg-neutral-200 text-neutral-700 focus:ring-neutral-300 cursor-not-allowed',
+    hover: '',
+  },
+  expired: {
+    key: 'purchase.expired_button',
+    base: 'bg-red-100 text-red-700 focus:ring-red-200 cursor-not-allowed',
+    hover: '',
+  },
+  refunded: {
+    key: 'purchase.refund_button_refunded',
+    base: 'bg-emerald-100 text-emerald-700 focus:ring-emerald-200 cursor-not-allowed',
+    hover: '',
+  },
+}
+
+const isDisabled = computed(() => props.loading || props.status !== 'available')
+const buttonText = computed(() => t(uiByStatus[props.status].key))
+
+function onClick() {
+  if (!isDisabled.value) emit('click')
+}
+
+defineOptions({ name: 'PurchaseActionButton' })
 </script>

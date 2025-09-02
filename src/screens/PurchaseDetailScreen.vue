@@ -84,14 +84,36 @@
             {{ $t('purchase_detail.details') }}
           </h2>
 
-          <div class="border border-gray-300 rounded-lg p-6 w-full md:w-[600px] bg-white shadow-md">
+          <div
+            v-if="error"
+            class="border border-red-200 bg-red-50 text-red-800 rounded-lg p-3 w-full md:w-[600px]"
+          >
+            {{ error }}
+          </div>
+
+          <div
+            v-else-if="loading"
+            class="border border-gray-200 rounded-lg p-6 w-full md:w-[600px] bg-white shadow-md"
+          >
+            <div class="space-y-4 animate-pulse">
+              <div class="h-4 bg-gray-200 rounded w-1/3"></div>
+              <div class="h-4 bg-gray-200 rounded w-2/3"></div>
+              <div class="h-4 bg-gray-200 rounded w-1/4"></div>
+              <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+              <div class="h-4 bg-gray-200 rounded w-1/5"></div>
+            </div>
+          </div>
+
+          <div
+            v-else
+            class="border border-gray-300 rounded-lg p-6 w-full md:w-[600px] bg-white shadow-md"
+          >
             <div class="mb-6">
               <h3 class="text-md font-medium text-text-color mb-1">
                 {{ $t('purchase_detail.name') }}
               </h3>
-
               <p class="text-sm text-secundary-text-color">
-                {{ purchase.title }}
+                {{ purchase!.title }}
               </p>
             </div>
 
@@ -99,9 +121,8 @@
               <h3 class="text-md font-medium text-text-color mb-1">
                 {{ $t('purchase_detail.value') }}
               </h3>
-
               <p class="text-sm text-secundary-text-color">
-                1x {{ formatCurrency(purchase.amount) }}
+                1x {{ formatCurrency(purchase!.amount) }}
               </p>
             </div>
 
@@ -109,9 +130,8 @@
               <h3 class="text-md font-medium text-text-color mb-1">
                 {{ $t('purchase_detail.refund_deadline') }}
               </h3>
-
               <p class="text-sm text-secundary-text-color">
-                {{ formatDate(purchase.refundDeadline) }}
+                {{ formatDate(purchase!.refundDeadline) }}
               </p>
             </div>
 
@@ -119,7 +139,6 @@
               <h3 class="text-md font-medium text-text-color mb-1">
                 {{ $t('purchase_detail.payment_method') }}
               </h3>
-
               <p class="text-sm text-secundary-text-color">Mastercard **** 1234</p>
             </div>
 
@@ -127,13 +146,12 @@
               <h3 class="text-md font-medium text-text-color mb-1">
                 {{ $t('purchase_detail.support') }}
               </h3>
-
               <p class="text-sm text-secundary-text-color">suporte@multidrop.com</p>
             </div>
           </div>
         </div>
 
-        <div class="flex flex-col gap-3">
+        <div class="flex flex-col gap-3" v-if="!loading && !error">
           <h2 class="text-lg font-semibold text-text-color text-left">
             {{ $t('purchase_detail.motivation') }}
           </h2>
@@ -143,7 +161,6 @@
               <h3 class="text-md font-medium text-text-color mb-1">
                 {{ $t('purchase_detail.select_motive') }}
               </h3>
-
               <p class="text-sm text-secundary-text-color">
                 {{ $t('purchase_detail.required') }} <span class="text-red-500 ml-1">*</span>
               </p>
@@ -159,21 +176,13 @@
                     v-model="selectedReason"
                     :value="reason.id"
                   />
-
                   <span
                     class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center transition-colors peer-checked:border-green-600"
                   >
                     <span
-                      class="w-2.5 h-2.5 rounded-full"
-                      :style="{
-                        backgroundColor:
-                          selectedReason === reason.id
-                            ? 'oklch(62.7% 0.194 149.214)'
-                            : 'transparent',
-                      }"
-                    />
+                      class="w-2.5 h-2.5 rounded-full peer-checked:bg-green-600 transition-colors"
+                    ></span>
                   </span>
-
                   <span class="text-sm text-text-color">
                     {{ $t(reason.labelKey) }}
                   </span>
@@ -185,13 +194,11 @@
               <label class="block text-md font-medium text-text-color mb-1" for="additional-info">
                 {{ $t('purchase_detail.more_information') }}
               </label>
-
               <textarea
                 id="additional-info"
                 rows="4"
                 class="w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-offset-primary-color-medium focus:border-primary-color-medium focus:outline-none p-3 text-sm text-text-color"
               />
-
               <p class="text-xs text-secundary-text-color mt-1">
                 {{ $t('purchase_detail.optional') }}
               </p>
@@ -199,7 +206,12 @@
           </div>
         </div>
 
-        <BaseButton type="button" class="w-full md:w-[200px] justify-center" @click="openDialog">
+        <BaseButton
+          type="button"
+          class="w-full md:w-[200px] justify-center"
+          :disabled="loading || !!error || !selectedReason"
+          @click="openDialog"
+        >
           <span className="font-normal text-base">
             {{ $t('refund.request_refund') }}
           </span>
@@ -210,12 +222,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import BaseButton from '@/components/BaseButton.vue'
 import Dialog from 'primevue/dialog'
 import { formatCurrency } from '@/utils/formatCurrency'
 import { formatDate } from '@/utils/formatDate'
 import { useRoute, useRouter } from 'vue-router'
+import type { Purchase } from '@/core/purchase'
+import { getPurchaseById } from '@/services/purchases'
 
 interface RefundReason {
   id: string
@@ -225,100 +239,49 @@ interface RefundReason {
 const router = useRouter()
 const route = useRoute()
 const email = route.query.email
-const id = route.params.id
-const selectedReason = ref<string | null>(null)
-const visible = ref(false)
+const id = route.params.id as string
 
-const openDialog = () => {
+const visible = ref(false)
+const selectedReason = ref<string | null>(null)
+const purchase = ref<Purchase | null>(null)
+const loading = ref(true)
+const error = ref<string | null>(null)
+
+function openDialog() {
   visible.value = true
 }
-
-const purchases = [
-  {
-    id: '1',
-    title: 'Wireless Noise-Cancelling Headphones',
-    amount: 324.0,
-    purchaseDate: '2025-05-22',
-    refundDeadline: '2025-05-29',
-    image: '/api/placeholder/80/80',
-    refundStatus: 'available',
-  },
-  {
-    id: '2',
-    title: 'Wireless Noise-Cancelling Headphones',
-    amount: 324.0,
-    purchaseDate: '2025-05-22',
-    refundDeadline: '2025-05-29',
-    image: '/api/placeholder/80/80',
-    refundStatus: 'available',
-  },
-  {
-    id: '3',
-    title: 'Wireless Noise-Cancelling Headphones',
-    amount: 324.0,
-    purchaseDate: '2025-05-22',
-    refundDeadline: '2025-05-29',
-    image: '/api/placeholder/80/80',
-    refundStatus: 'requested',
-  },
-  {
-    id: '4',
-    title: 'Wireless Noise-Cancelling Headphones',
-    amount: 324.0,
-    purchaseDate: '2025-05-22',
-    refundDeadline: '2025-05-29',
-    image: '/api/placeholder/80/80',
-    refundStatus: 'refunded',
-  },
-  {
-    id: '5',
-    title: 'Wireless Noise-Cancelling Headphones',
-    amount: 324.0,
-    purchaseDate: '2025-05-22',
-    refundDeadline: '2025-05-29',
-    image: '/api/placeholder/80/80',
-    refundStatus: 'expired',
-  },
-]
-
-const logout = () => {
+function logout() {
   router.push({ name: 'Purchases', query: {} })
 }
-
-const goBack = () => {
+function goBack() {
   router.back()
 }
 
-const purchase = purchases.find((p) => p.id === id) || purchases[0]
-
 const refundReasons = ref<RefundReason[]>([
-  {
-    id: 'access_issue',
-    labelKey: 'refund_form.reasons.access_issue',
-  },
-  {
-    id: 'need_money',
-    labelKey: 'refund_form.reasons.need_money',
-  },
-  {
-    id: 'files_not_opening',
-    labelKey: 'refund_form.reasons.files_not_opening',
-  },
-  {
-    id: 'quality_expectations',
-    labelKey: 'refund_form.reasons.quality_expectations',
-  },
-  {
-    id: 'incomplete_product',
-    labelKey: 'refund_form.reasons.incomplete_product',
-  },
-  {
-    id: 'duplicate_purchase',
-    labelKey: 'refund_form.reasons.duplicate_purchase',
-  },
+  { id: 'access_issue', labelKey: 'refund_form.reasons.access_issue' },
+  { id: 'need_money', labelKey: 'refund_form.reasons.need_money' },
+  { id: 'files_not_opening', labelKey: 'refund_form.reasons.files_not_opening' },
+  { id: 'quality_expectations', labelKey: 'refund_form.reasons.quality_expectations' },
+  { id: 'incomplete_product', labelKey: 'refund_form.reasons.incomplete_product' },
+  { id: 'duplicate_purchase', labelKey: 'refund_form.reasons.duplicate_purchase' },
 ])
 
-defineOptions({
-  name: 'PurchaseDetailScreen',
+onMounted(async () => {
+  try {
+    loading.value = true
+    error.value = null
+    if (id) {
+      purchase.value = await getPurchaseById(id)
+      if (!purchase.value) error.value = 'Compra não encontrada.'
+    } else {
+      error.value = 'ID da compra inválido.'
+    }
+  } catch {
+    error.value = 'Falha ao carregar os detalhes da compra.'
+  } finally {
+    loading.value = false
+  }
 })
+
+defineOptions({ name: 'PurchaseDetailScreen' })
 </script>

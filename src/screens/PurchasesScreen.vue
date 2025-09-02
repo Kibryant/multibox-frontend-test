@@ -39,12 +39,17 @@
       </div>
 
       <div class="space-y-6">
-        <div v-for="purchase in purchases" :key="purchase.id">
-          <PurchaseCardRoot :purchase="purchase" @refundRequested="requestRefund" />
+        <div v-if="isLoading" class="flex justify-center my-12">
+          <i class="pi pi-spin pi-spinner text-4xl text-gray-400"></i>
+        </div>
+        <div v-if="!isLoading && purchases.length > 0" class="space-y-6">
+          <div v-for="purchase in purchases" :key="purchase.id">
+            <PurchaseCardRoot :purchase="purchase" @refundRequested="requestRefund" />
+          </div>
         </div>
       </div>
 
-      <div v-if="purchases.length === 0" class="text-center py-12">
+      <div v-if="!isLoading && purchases.length === 0" class="text-center py-12">
         <i class="pi pi-shopping-cart text-gray-400 text-6xl mb-4"></i>
         <h3 class="text-lg font-medium text-gray-900 mb-2">Nenhuma compra encontrada</h3>
         <p class="text-gray-600">Você ainda não fez nenhuma compra.</p>
@@ -59,20 +64,13 @@ import AlertBanner from '@/components/AlertBanner.vue'
 import { useRoute } from 'vue-router'
 import { useRouter } from 'vue-router'
 import PurchaseCardRoot from '@/components/PurchaseCard/PurchaseCardRoot.vue'
+import type { Purchase } from '@/core/purchase'
+import { getPurchases } from '@/services/purchases'
 
 const route = useRoute()
 const router = useRouter()
 const email = route.query.email
-
-interface Purchase {
-  id: string
-  title: string
-  amount: number
-  purchaseDate: string
-  refundDeadline: string
-  image: string
-  refundStatus: 'available' | 'requested' | 'expired' | 'refunded'
-}
+const isLoading = ref(false)
 
 const emit = defineEmits<{
   goBack: []
@@ -99,54 +97,15 @@ const requestRefund = (purchase: Purchase) => {
   router.push({ name: 'PurchaseDetail', params: { id: purchase.id }, query: { email } })
 }
 
-const loadPurchases = () => {
-  purchases.value = [
-    {
-      id: '1',
-      title: 'Wireless Noise-Cancelling Headphones',
-      amount: 324.0,
-      purchaseDate: '2025-05-22',
-      refundDeadline: '2025-05-29',
-      image: '/api/placeholder/80/80',
-      refundStatus: 'available',
-    },
-    {
-      id: '2',
-      title: 'Wireless Noise-Cancelling Headphones',
-      amount: 324.0,
-      purchaseDate: '2025-05-22',
-      refundDeadline: '2025-05-29',
-      image: '/api/placeholder/80/80',
-      refundStatus: 'available',
-    },
-    {
-      id: '3',
-      title: 'Wireless Noise-Cancelling Headphones',
-      amount: 324.0,
-      purchaseDate: '2025-05-22',
-      refundDeadline: '2025-05-29',
-      image: '/api/placeholder/80/80',
-      refundStatus: 'requested',
-    },
-    {
-      id: '4',
-      title: 'Wireless Noise-Cancelling Headphones',
-      amount: 324.0,
-      purchaseDate: '2025-05-22',
-      refundDeadline: '2025-05-29',
-      image: '/api/placeholder/80/80',
-      refundStatus: 'refunded',
-    },
-    {
-      id: '5',
-      title: 'Wireless Noise-Cancelling Headphones',
-      amount: 324.0,
-      purchaseDate: '2025-05-22',
-      refundDeadline: '2025-05-29',
-      image: '/api/placeholder/80/80',
-      refundStatus: 'expired',
-    },
-  ]
+const loadPurchases = async () => {
+  isLoading.value = true
+
+  const result = await getPurchases()
+
+  result.sort((a, b) => new Date(b.purchaseDate).getTime() - new Date(a.purchaseDate).getTime())
+
+  purchases.value = result
+  isLoading.value = false
 }
 
 onMounted(() => {
@@ -157,29 +116,3 @@ defineOptions({
   name: 'PurchasesList',
 })
 </script>
-
-<style scoped>
-.p-button {
-  border-radius: 0.5rem;
-  font-weight: 500;
-  transition: all 0.2s ease-in-out;
-  border: none;
-}
-
-.p-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.p-button:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
-}
-
-.p-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-</style>
